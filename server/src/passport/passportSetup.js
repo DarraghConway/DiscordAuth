@@ -1,12 +1,28 @@
 const passport = require("passport");
 const DiscordStrategy = require("passport-discord").Strategy;
-require("dotenv").config();
 const { fetchGuildRole, hasRole } = require("../discord-api");
 //const db = require("../../db");
+require("dotenv").config();
 
 function wait(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
+
+passport.serializeUser((profile, done) => {
+  // Serialize user object (store user data in session)
+  const sessionUser = {
+    id: profile.id,
+
+    // ... other user properties or additional data
+  };
+  done(null, sessionUser);
+});
+
+passport.deserializeUser((sessionUser, done) => {
+  // Retrieve user object using the stored session data
+  // Here you can directly use sessionUser to reconstruct the user object
+  done(null, sessionUser);
+});
 
 passport.use(
   new DiscordStrategy(
@@ -102,4 +118,20 @@ passport.use(
   )
 );
 
-module.exports = passport;
+function initDiscordAuthCallback(server, passport) {
+  server.get(
+    "/auth/discord/callback",
+    passport.authenticate("discord", {
+      failureRedirect: "http://localhost:3000/buy", // Redirect to the login page if authentication fails
+    }),
+    async (req, res) => {
+      // Assuming you have verified the user's credentials and obtained their access token
+      const userId = req.user.isAuthorized;
+
+      // Redirect the user to the home page or any other protected route
+      res.redirect("http://localhost:3000/home");
+    }
+  );
+};
+
+module.exports = { passport, initDiscordAuthCallback };
