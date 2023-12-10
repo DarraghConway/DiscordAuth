@@ -1,0 +1,29 @@
+.nav-item {
+  /* Styles for the outer Tabs component */
+  background-color: darkgray;
+}
+
+.fade tab-pane active show {
+  background-color: azure;
+}
+
+#nested-tabs-tabpane-subtab1 {
+  background-color: grey;
+}
+.mt-5 {
+  /* Styles for the mt-5 class (margin-top: 5rem) */
+  color: red;
+}
+
+.mt-3 {
+  /* Styles for the mt-5 class (margin-top: 5rem) */
+  color: red;
+}
+
+h1 {
+  color: orange;
+}
+
+h2 {
+  color: purple;
+}
