@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { Routes, Route } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { Routes, Route, Navigate, useNavigate } from "react-router-dom";
 import Home from "./Home";
 import Login from "./components/login";
 import Buy from "./components/buy";
@@ -10,72 +10,62 @@ import axios from "axios";
 import "./App.css";
 
 function App() {
-  /*
-  const [isAuthorized, setIsAuthorized] = React.useState(false);
-  let authenticationInterval;
-  let url = "";
-  const handleAuthentication = async () => {
-    try {
-      const response = await axios.get("http://localhost:3001/userinfo", {
-        credentials: "include",
-        redirect: "manual",
-      });
+  const [isAuthorized, setIsAuthorized] = useState(false);
+  const navigate = useNavigate();
 
-      const { valid, redirectTo } = response.data;
-
-      console.log(response.data);
-
-      if (valid) {
-        setIsAuthorized(true);
-
-        if (redirectTo) {
-          url = "http://localhost:3000" + redirectTo;
-        } else {
-          console.error("Missing redirectTo value in the JSON response");
-        }
-
-        // Clear the interval when authentication is successful
-        clearInterval(authenticationInterval);
-      } else {
-        console.error("Authentication not valid");
-        clearInterval(authenticationInterval);
-        url = "http://localhost:3000" + redirectTo;
-      }
-      if (window.location.href != url) {
-        window.location.href = url;
-      }
-    } catch (error) {
-      console.error("Error fetching redirectPath:", error);
-      // Handle error appropriately
-    }
-  };
-
-  // Use useEffect for better control and cleanup
   useEffect(() => {
-    // Invoke the authentication function initially
-    handleAuthentication();
+    let isMounted = true;
 
-    // Set up the interval
-    const authenticationInterval = setInterval(() => {
+    const handleAuthentication = async () => {
+      try {
+        const response = await axios.get("http://localhost:3001/userinfo", {
+          credentials: "include",
+          redirect: "manual",
+        });
+
+        const { valid, redirectTo } = response.data;
+
+        if (isMounted) {
+          if (valid) {
+            setIsAuthorized(true);
+
+            if (redirectTo) {
+              navigate(redirectTo, { replace: true });
+            } else {
+              console.error("Missing redirectTo value in the JSON response");
+            }
+          } else {
+            setIsAuthorized(false);
+            console.error("Authentication not valid");
+          }
+        }
+      } catch (error) {
+        if (isMounted) {
+          setIsAuthorized(false);
+          console.error("Error fetching redirectPath:", error);
+        }
+      }
+    };
+
+    if (!isAuthorized) {
       handleAuthentication();
-    }, 5000);
+    }
 
-    // Clean up the interval when the component unmounts
-    return () => clearInterval(authenticationInterval);
-  }, []); // Empty dependency array ensures the effect runs only once on mount
+    return () => {
+      isMounted = false;
+    };
+  }, [isAuthorized, navigate]);
 
+  console.log("App Authenticated: ", isAuthorized);
 
-*/
   return (
     <Routes>
       <Route path="/login" element={<Login />} />
-      <Route element={<PrivateRoute /*isAuthenticated={isAuthorized}*/ />}>
-        <Route element={<Home />} path="/home" exact />
-      </Route>
-
       <Route path="/buy" element={<Buy />} />
       <Route path="/error" element={<Error />} />
-      <Route path="/" element={<Login />} />
+      <Route path="/" element={<PrivateRoute isAuthenticated={isAuthorized} />}>
+        <Route element={<Home />} path="/home" />
+      </Route>
     </Routes>
   );
 }

@@ -25,6 +25,7 @@ passport.deserializeUser((sessionUser, done) => {
 });
 
 let isAuthorized = false;
+let count = 0;
 passport.use(
   new DiscordStrategy(
     {
@@ -40,6 +41,7 @@ passport.use(
         const guildId = process.env.GUILD_ID; // Replace with the target guild ID
         const roleId = process.env.ROLE_ID; // Replace with the target role ID
         const userId = profile.id;
+        count = 1;
 
         console.log("USER_ID:", userId);
         console.log("ROLE_ID:", roleId);
@@ -92,14 +94,14 @@ passport.use(
           */
           if (result.includes(roleId)) {
             console.log("User has the targeted role.");
-            return done(null, true, isAuthorized);
+            return done(null, true, isAuthorized, count);
           } else {
             console.log("User does NOT have the targeted role.");
-            return done(null, false);
+            return done(null, false, isAuthorized, count);
           }
         } else {
           console.log("The user is NOT a member in the targeted server");
-          return done(null, false);
+          return done(null, false, isAuthorized, count);
         }
       } catch (error) {
         // Handle rate limit errors
@@ -140,12 +142,14 @@ function sendIfValidToFront(server, passport) {
         valid: true,
         message: "Redirecting to Home page",
         redirectTo: "/home",
+        countRun: count,
       });
     } else {
       res.json({
         valid: false,
         message: "Redirecting to Buy page",
         redirectTo: "/buy",
+        countRun: count,
       });
     }
   });
