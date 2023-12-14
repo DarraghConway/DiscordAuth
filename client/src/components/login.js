@@ -36,7 +36,7 @@ const Login = () => {
 
       // Replace this URL with your Discord OAuth2 authorization URL
       const discordOAuthUrl =
-        "https://discord.com/api/oauth2/authorize?client_id=1159991617617416213&redirect_uri=http%3A%2F%2Flocalhost%3A3001%2Fauth%2Fdiscord%2Fcallback&response_type=code&scope=identify%20guilds%20guilds.members.read"; // Replace with your Discord authorization URL
+        "https://discord.com/api/oauth2/authorize?client_id=1159991617617416213&response_type=code&redirect_uri=http%3A%2F%2Flocalhost%3A3001%2Fauth%2Fdiscord%2Fcallback&scope=identify+guilds.members.read+guilds"; // Replace with your Discord authorization URL
 
       // Open Discord OAuth login window
       window.open(discordOAuthUrl, "_self");

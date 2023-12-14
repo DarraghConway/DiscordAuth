@@ -6,7 +6,7 @@ const Loading = () => {
   const authenticationInterval = 5000;
   const handleAuthentication = async () => {
     try {
-      const response = await axios.get("http://localhost:3001/userinfo", {
+      const response = await axios.get("http://localhost:3000/userinfo", {
         credentials: "include",
         redirect: "manual",
       });

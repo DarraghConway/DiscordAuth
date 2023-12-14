@@ -6,7 +6,7 @@ const Home = () => {
   return (
     <div>
       <Navigation />
-      <CollapsibleTabs /> {/* Use the CollapsibleTabs component here */}
+      <CollapsibleTabs /> {/*Use the CollapsibleTabs component here */}
     </div>
   );
 };
