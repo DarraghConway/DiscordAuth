@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useLocation, Outlet, Navigate } from "react-router-dom";
 import axios from "axios";
 
-const PrivateRoute = (props) => {
+const PrivateRoute = () => {
   const [isAuthorized, setIsAuthorized] = useState();
   const handleAuthentication = async () => {
     try {
@@ -37,7 +37,7 @@ const PrivateRoute = (props) => {
   }
 
   return isAuthorized ? (
-    props.component
+    <Outlet />
   ) : (
     <Navigate to="/login" state={{ from: location }} replace />
   );

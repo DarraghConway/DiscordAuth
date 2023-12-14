@@ -14,7 +14,9 @@ function App() {
       <Route path="/login" element={<Login />} />
       <Route path="/buy" element={<Buy />} />
       <Route path="/error" element={<Error />} />
-      <Route path="/" element={<PrivateRoute component={<Home />} />} />
+      <Route path="/" element={<PrivateRoute />}>
+        <Route path="/" element={<Home />} />
+      </Route>
     </Routes>
   );
 }
