@@ -32,7 +32,7 @@ const fetchGuildRole = async (
       try {
         // Attempt to refresh the access token
         const refreshResponse = await axios.post(
-          "http://localhost:3001/api/refresh-token", // Endpoint to refresh the access token
+          "/api/refresh-token", // Endpoint to refresh the access token
           {
             refresh_token: refreshToken,
           }

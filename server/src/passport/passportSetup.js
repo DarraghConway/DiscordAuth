@@ -67,11 +67,11 @@ async function verify(accessToken, refreshToken, profile, done) {
         return done(null, { id: profile.id, guilds: profile.guilds });
       } else {
         console.log("User does NOT have the targeted role.");
-        return done("User does NOT have the targeted role.");
+        return done(null);
       }
     } else {
       console.log("The user is NOT a member in the targeted server");
-      return done("The user is NOT a member in the targeted server");
+      return done(null);
     }
   } catch (error) {
     // Handle rate limit errors
@@ -112,8 +112,12 @@ function sendIfValidToFront(server, passport) {
 }
 
 function checkAuth(req, res, next) {
-  if (req.isAuthenticated()) return next();
-  res.send("not logged in :(");
+  if (req.isAuthenticated()) {
+    return next();
+  }
+  res.json({
+    valid: false,
+  });
 }
 
 module.exports = { passport, initDiscordAuthCallback, sendIfValidToFront }; //exported the newly created funtion 14/11
