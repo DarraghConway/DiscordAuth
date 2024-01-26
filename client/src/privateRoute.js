@@ -6,16 +6,14 @@ const PrivateRoute = () => {
   const [isAuthorized, setIsAuthorized] = useState();
   const handleAuthentication = async () => {
     try {
+      console.log("Handle Authentication called");
       const response = await axios.get("http://localhost:3001/userinfo", {
         credentials: "include",
         redirect: "manual",
       });
 
       const { valid } = response.data;
-      console.log(response.data);
-      console.log(valid);
       setIsAuthorized(valid);
-      console.log(isAuthorized);
     } catch (error) {
       setIsAuthorized(false);
       console.error("Error fetching redirectPath:", error);
@@ -24,12 +22,9 @@ const PrivateRoute = () => {
 
   useEffect(() => {
     if (!isAuthorized) {
-      console.log("Calling handle authentication");
       handleAuthentication();
     }
   }, [isAuthorized]);
-
-  console.log("App Authenticated: ", isAuthorized);
 
   const location = useLocation();
   if (isAuthorized === undefined) {
